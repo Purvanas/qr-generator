@@ -474,6 +474,7 @@
       document.getElementById('dl-png').disabled = false;
       document.getElementById('dl-svg').disabled = false;
     } catch (err) {
+      if (sequence !== generationSequence) return;
       if (err.name === 'AbortError') return;
       const preview = document.getElementById('preview');
       preview.innerHTML = '';
