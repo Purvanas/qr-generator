@@ -1,0 +1,17 @@
+{
+  "name": "qr-generator",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Générateur de QR codes PNG et SVG pour texte, e-mail et Wi-Fi",
+  "scripts": {
+    "start": "node --env-file-if-exists=.env server.js",
+    "test": "node --test"
+  },
+  "author": "Purvanas",
+  "license": "MIT",
+  "engines": { "node": "^22.0.0 || ^24.0.0" },
+  "dependencies": {
+    "express": "^4.21.0",
+    "qrcode": "^1.5.4"
+  }
+}
