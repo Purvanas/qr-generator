@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Generateur QR Code gratuit en ligne — URL, WiFi, texte, email</title>
+  <meta name="description" content="Generateur de QR code gratuit en ligne. Creez des QR codes pour URL, WiFi, texte et email, puis telechargez-les en PNG ou SVG.">
+  <meta name="keywords" content="generateur qr code gratuit, creer qr code en ligne, qr code personnalise, qr code wifi, qr code url">
+  <meta property="og:title" content="Generateur de QR Code gratuit en ligne">
+  <meta property="og:description" content="Creez des QR codes personnalises gratuitement. Telechargement instantane.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://qr.purvanas.fr">
+  <link rel="canonical" href="https://qr.purvanas.fr">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      min-height: 100vh;
+      background: #0a0a0a;
+      color: #e0e0e0;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+    .container {
+      width: 100%;
+      max-width: 480px;
+    }
+    h1 {
+      text-align: center;
+      font-size: 1.6rem;
+      font-weight: 300;
+      margin-bottom: .3rem;
+      letter-spacing: -.02em;
+    }
+    .subtitle {
+      text-align: center;
+      color: #666;
+      font-size: .85rem;
+      margin-bottom: 1.5rem;
+    }
+
+    /* Type toggle */
+    .type-toggle {
+      display: flex;
+      background: #141414;
+      border-radius: 10px;
+      padding: 3px;
+      margin-bottom: 1.2rem;
+      border: 1px solid #2a2a2a;
+    }
+    .type-btn {
+      flex: 1;
+      padding: .5rem;
+      border: none;
+      border-radius: 8px;
+      background: transparent;
+      color: #888;
+      font-size: .8rem;
+      cursor: pointer;
+      transition: all .2s;
+      font-weight: 500;
+    }
+    .type-btn.active {
+      background: #2a2a2a;
+      color: #fff;
+    }
+
+    /* Input section */
+    .input-section { margin-bottom: 1.2rem; }
+    .input-group { margin-bottom: .8rem; }
+    .input-group label {
+      display: block;
+      font-size: .75rem;
+      color: #888;
+      margin-bottom: .3rem;
+      font-weight: 500;
+    }
+    input[type="text"], input[type="url"], input[type="email"],
+    input[type="tel"], textarea, select {
+      width: 100%;
+      background: #141414;
+      border: 1px solid #2a2a2a;
+      color: #e0e0e0;
+      padding: .6rem .8rem;
+      border-radius: 8px;
+      font-size: .85rem;
+      outline: none;
+      transition: border-color .2s;
+      font-family: inherit;
+    }
+    input:focus, textarea:focus, select:focus { border-color: #3b82f6; }
+    input::placeholder, textarea::placeholder { color: #444; }
+    textarea { resize: vertical; min-height: 80px; }
+    select { cursor: pointer; }
+    select option { background: #141414; }
+
+    /* WiFi encryption row */
+    .row { display: flex; gap: .6rem; }
+    .row > * { flex: 1; }
+
+    /* Options */
+    .options {
+      display: flex;
+      gap: .6rem;
+      flex-wrap: wrap;
+      margin-bottom: 1.2rem;
+    }
+    .option {
+      flex: 1;
+      min-width: 90px;
+    }
+    .option label {
+      display: block;
+      font-size: .7rem;
+      color: #666;
+      margin-bottom: .25rem;
+    }
+    .option select, .option input {
+      width: 100%;
+      padding: .4rem .5rem;
+      font-size: .8rem;
+    }
+
+    /* Colors */
+    .color-row {
+      display: flex;
+      gap: .8rem;
+      margin-bottom: 1.2rem;
+    }
+    .color-group {
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+    }
+    .color-group label {
+      font-size: .75rem;
+      color: #666;
+    }
+    input[type="color"] {
+      width: 32px;
+      height: 32px;
+      border: 1px solid #2a2a2a;
+      border-radius: 6px;
+      background: none;
+      cursor: pointer;
+      padding: 2px;
+    }
+    input[type="color"]::-webkit-color-swatch-wrapper { padding: 0; }
+    input[type="color"]::-webkit-color-swatch { border: none; border-radius: 4px; }
+
+    /* Preview */
+    .preview {
+      background: #141414;
+      border: 1px solid #2a2a2a;
+      border-radius: 12px;
+      padding: 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 200px;
+      margin-bottom: 1rem;
+      position: relative;
+    }
+    .preview img {
+      max-width: 100%;
+      border-radius: 4px;
+      image-rendering: pixelated;
+    }
+    .preview .placeholder {
+      color: #444;
+      font-size: .85rem;
+    }
+    .preview .loading {
+      color: #3b82f6;
+      font-size: .8rem;
+    }
+
+    /* Buttons */
+    .actions {
+      display: flex;
+      gap: .5rem;
+    }
+    .btn {
+      flex: 1;
+      padding: .65rem;
+      border: none;
+      border-radius: 10px;
+      font-size: .85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all .2s;
+    }
+    .btn:disabled { opacity: .4; cursor: default; }
+    .btn-primary {
+      background: #3b82f6;
+      color: #fff;
+    }
+    .btn-primary:hover:not(:disabled) { background: #2563eb; }
+    .btn-secondary {
+      background: #1e1e1e;
+      color: #ccc;
+      border: 1px solid #2a2a2a;
+    }
+    .btn-secondary:hover:not(:disabled) { background: #2a2a2a; color: #fff; }
+
+    .footer {
+      text-align: center;
+      margin-top: 1.5rem;
+      font-size: .7rem;
+      color: #444;
+    }
+    .footer a { color: #555; text-decoration: none; }
+    .footer a:hover { color: #888; }
+
+    /* Char count */
+    .char-count {
+      text-align: right;
+      font-size: .7rem;
+      color: #555;
+      margin-top: .2rem;
+    }
+    .char-count.over { color: #ef5350; }
+    @media (max-width: 420px) {
+      body { align-items: flex-start; padding: .75rem; }
+      .actions { flex-direction: column; }
+      .btn, .type-btn { min-height: 44px; }
+      .preview { padding: 1rem; min-height: 180px; }
+    }
+  </style>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"QR Generator","url":"https://qr.purvanas.fr","description":"Generateur de QR codes personnalises gratuit","applicationCategory":"UtilitiesApplication","operatingSystem":"All","offers":{"@type":"Offer","price":"0","priceCurrency":"EUR"}}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Comment creer un QR code gratuit ?","acceptedAnswer":{"@type":"Answer","text":"Saisissez votre texte, URL ou reseau WiFi, personnalisez les couleurs et la taille, puis telechargez le resultat en PNG ou SVG."}},{"@type":"Question","name":"Le QR code expire-t-il ?","acceptedAnswer":{"@type":"Answer","text":"Non. Un QR code est une image statique. La destination qu il contient doit toutefois rester disponible."}},{"@type":"Question","name":"Le contenu est-il conserve ?","acceptedAnswer":{"@type":"Answer","text":"Le contenu est envoye au service le temps de generer le QR code, puis la reponse est renvoyee sans stockage applicatif."}},{"@type":"Question","name":"Quels formats sont disponibles ?","acceptedAnswer":{"@type":"Answer","text":"Le QR code peut etre telecharge en PNG ou en SVG."}}]}</script>
+</head>
+<body>
+  <div class="container">
+    <h1>QR Generator</h1>
+    <p class="subtitle">Generateur de QR codes gratuit</p>
+
+    <!-- Type toggle -->
+    <div class="type-toggle">
+      <button class="type-btn active" data-type="text">Texte / URL</button>
+      <button class="type-btn" data-type="wifi">WiFi</button>
+      <button class="type-btn" data-type="email">Email</button>
+    </div>
+
+    <!-- Text/URL input -->
+    <div class="input-section" id="input-text">
+      <div class="input-group">
+        <label>Contenu</label>
+        <textarea id="qr-content" placeholder="Entrez un texte ou une URL..." rows="3"></textarea>
+        <div class="char-count"><span id="char-count">0</span> / 4000</div>
+      </div>
+    </div>
+
+    <!-- WiFi input -->
+    <div class="input-section" id="input-wifi" style="display:none">
+      <div class="input-group">
+        <label>Nom du reseau (SSID)</label>
+        <input type="text" id="wifi-ssid" placeholder="MonWiFi">
+      </div>
+      <div class="input-group">
+        <label>Mot de passe</label>
+        <input type="text" id="wifi-pass" placeholder="••••••••">
+      </div>
+      <div class="input-group">
+        <label>Chiffrement</label>
+        <select id="wifi-enc">
+          <option value="WPA">WPA/WPA2</option>
+          <option value="WEP">WEP</option>
+          <option value="nopass">Aucun</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Email input -->
+    <div class="input-section" id="input-email" style="display:none">
+      <div class="input-group">
+        <label>Adresse email</label>
+        <input type="email" id="email-addr" placeholder="contact@example.com">
+      </div>
+      <div class="input-group">
+        <label>Sujet (optionnel)</label>
+        <input type="text" id="email-subject" placeholder="Objet du mail">
+      </div>
+      <div class="input-group">
+        <label>Corps (optionnel)</label>
+        <textarea id="email-body" placeholder="Contenu du mail..." rows="2"></textarea>
+      </div>
+    </div>
+
+    <!-- Options -->
+    <div class="options">
+      <div class="option">
+        <label>Taille</label>
+        <select id="opt-size">
+          <option value="200">200px</option>
+          <option value="400" selected>400px</option>
+          <option value="600">600px</option>
+          <option value="800">800px</option>
+          <option value="1000">1000px</option>
+        </select>
+      </div>
+      <div class="option">
+        <label>Correction</label>
+        <select id="opt-ec">
+          <option value="L">Low (7%)</option>
+          <option value="M" selected>Medium (15%)</option>
+          <option value="Q">Quartile (25%)</option>
+          <option value="H">High (30%)</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Colors -->
+    <div class="color-row">
+      <div class="color-group">
+        <label>Couleur</label>
+        <input type="color" id="opt-fg" value="#000000">
+      </div>
+      <div class="color-group">
+        <label>Fond</label>
+        <input type="color" id="opt-bg" value="#ffffff">
+      </div>
+    </div>
+
+    <!-- Preview -->
+    <div class="preview" id="preview">
+      <span class="placeholder">Entrez du contenu pour generer un QR code</span>
+    </div>
+
+    <!-- Actions -->
+    <div class="actions">
+      <button class="btn btn-primary" id="dl-png" disabled>Telecharger PNG</button>
+      <button class="btn btn-secondary" id="dl-svg" disabled>Telecharger SVG</button>
+    </div>
+
+
+<!-- CROSS LINKS -->
+<div style="display:flex;gap:.5rem;margin-top:1.2rem;flex-wrap:wrap;justify-content:center">
+<a href="https://dl.purvanas.fr" style="padding:.45rem .8rem;border:1px solid #2a2a2a;border-radius:8px;background:#141414;color:#888;font-size:.72rem;text-decoration:none"><span style="color:#22c55e">&#8615;</span> Telecharger une video</a>
+<a href="https://convert.purvanas.fr" style="padding:.45rem .8rem;border:1px solid #2a2a2a;border-radius:8px;background:#141414;color:#888;font-size:.72rem;text-decoration:none"><span style="color:#f59e0b">&#9881;</span> Convertir une image</a>
+<a href="https://drop.purvanas.fr" style="padding:.45rem .8rem;border:1px solid #2a2a2a;border-radius:8px;background:#141414;color:#888;font-size:.72rem;text-decoration:none"><span style="color:#6ea8fe">&#8682;</span> Partager un fichier</a>
+</div>
+
+<!-- SEO CONTENT -->
+<div style="max-width:420px;margin:2rem auto 0;padding-top:1.5rem;border-top:1px solid #1e1e1e">
+<h2 style="font-size:1.1rem;font-weight:600;color:#ccc;margin-bottom:.8rem">Generateur de QR Code gratuit en ligne</h2>
+<p style="font-size:.8rem;color:#555;line-height:1.6;margin-bottom:.8rem">Creez des QR codes personnalises sans inscription ni logiciel a installer. Le contenu est envoye au service pour la generation, puis renvoye sans etre conserve par l'application.</p>
+
+<h3 style="font-size:.9rem;font-weight:600;color:#999;margin:1.2rem 0 .4rem">QR Code URL et site web</h3>
+<p style="font-size:.8rem;color:#555;line-height:1.6;margin-bottom:.8rem">Generez un QR code pour n'importe quelle URL. Ideal pour les cartes de visite, les flyers, les affiches, ou les menus de restaurant. Collez votre lien, personnalisez les couleurs, et telechargez le QR code en PNG.</p>
+
+<h3 style="font-size:.9rem;font-weight:600;color:#999;margin:1.2rem 0 .4rem">QR Code WiFi</h3>
+<p style="font-size:.8rem;color:#555;line-height:1.6;margin-bottom:.8rem">Creez un QR code WiFi que vos invites peuvent scanner pour se connecter automatiquement a votre reseau. Plus besoin de dicter le mot de passe — un scan suffit. Compatible avec tous les smartphones.</p>
+
+<h3 style="font-size:.9rem;font-weight:600;color:#999;margin:1.2rem 0 .4rem">QR Code texte, email et telephone</h3>
+<p style="font-size:.8rem;color:#555;line-height:1.6;margin-bottom:.8rem">Encodez du texte libre, une adresse email (mailto:), un numero de telephone (tel:), ou un SMS dans un QR code. Utile pour les supports marketing, les etiquettes produit, ou les signatures email.</p>
+
+<h3 style="font-size:.9rem;font-weight:600;color:#999;margin:1.2rem 0 .4rem">Personnalisation et taille</h3>
+<p style="font-size:.8rem;color:#555;line-height:1.6;margin-bottom:.8rem">Choisissez les couleurs du QR code (premier plan et arriere-plan), la taille en pixels, et le niveau de correction d'erreur (L, M, Q, H). Un niveau de correction eleve permet au QR code d'etre lu meme partiellement endommage.</p>
+
+<div style="margin-top:1.5rem">
+<h2 style="font-size:1.1rem;font-weight:600;color:#ccc;margin-bottom:.8rem">Questions frequentes</h2>
+<details style="margin-bottom:.6rem;border:1px solid #1e1e1e;border-radius:8px"><summary style="padding:.7rem 1rem;font-size:.8rem;font-weight:600;color:#aaa;cursor:pointer;list-style:none;display:flex;justify-content:space-between">Comment creer un QR code gratuit ?</summary><p style="padding:0 1rem .7rem;font-size:.8rem;color:#555;line-height:1.6">Collez votre texte, URL, ou information WiFi dans le champ, personnalisez les couleurs et la taille, puis cliquez sur Telecharger. Le QR code est genere instantanement en PNG.</p></details>
+<details style="margin-bottom:.6rem;border:1px solid #1e1e1e;border-radius:8px"><summary style="padding:.7rem 1rem;font-size:.8rem;font-weight:600;color:#aaa;cursor:pointer;list-style:none;display:flex;justify-content:space-between">Le QR code expire-t-il ?</summary><p style="padding:0 1rem .7rem;font-size:.8rem;color:#555;line-height:1.6">Non. Un QR code est une image statique — il n'expire jamais. L'information encodee dans le QR code reste accessible tant que la destination (URL, WiFi, etc.) est active.</p></details>
+<details style="margin-bottom:.6rem;border:1px solid #1e1e1e;border-radius:8px"><summary style="padding:.7rem 1rem;font-size:.8rem;font-weight:600;color:#aaa;cursor:pointer;list-style:none;display:flex;justify-content:space-between">Le contenu est-il conserve ?</summary><p style="padding:0 1rem .7rem;font-size:.8rem;color:#555;line-height:1.6">Le contenu est transmis au serveur pour fabriquer les fichiers PNG et SVG. L'application ne le conserve pas apres avoir renvoye le resultat.</p></details>
+<details style="margin-bottom:.6rem;border:1px solid #1e1e1e;border-radius:8px"><summary style="padding:.7rem 1rem;font-size:.8rem;font-weight:600;color:#aaa;cursor:pointer;list-style:none;display:flex;justify-content:space-between">Quels formats sont disponibles ?</summary><p style="padding:0 1rem .7rem;font-size:.8rem;color:#555;line-height:1.6">PNG pour un usage courant, ou SVG pour conserver un rendu vectoriel redimensionnable.</p></details>
+</div>
+</div>
+    <div class="footer">
+      Contenu non conserve &middot; Generation a la demande
+      <br><a href="https://purvanas.fr">purvanas.fr</a>
+    </div>
+  </div>
+
+<script src="/qr-content.js"></script>
+<script>
+(function() {
+  let currentType = 'text';
+  let debounceTimer = null;
+  let currentData = null; // { png: dataUrl, svg: svgString }
+  let generationController = null;
+  let generationSequence = 0;
+
+  // Type toggle
+  document.querySelectorAll('.type-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.type-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      currentType = btn.dataset.type;
+      document.getElementById('input-text').style.display = currentType === 'text' ? '' : 'none';
+      document.getElementById('input-wifi').style.display = currentType === 'wifi' ? '' : 'none';
+      document.getElementById('input-email').style.display = currentType === 'email' ? '' : 'none';
+      scheduleGenerate();
+    });
+  });
+
+  // Build content string based on type
+  function buildContent() {
+    if (currentType === 'text') {
+      return document.getElementById('qr-content').value;
+    } else if (currentType === 'wifi') {
+      const ssid = document.getElementById('wifi-ssid').value;
+      const pass = document.getElementById('wifi-pass').value;
+      const enc = document.getElementById('wifi-enc').value;
+      if (!ssid) return '';
+      return QrContent.buildWifiPayload({ ssid, password: pass, encryption: enc });
+    } else if (currentType === 'email') {
+      const addr = document.getElementById('email-addr').value;
+      const subj = document.getElementById('email-subject').value;
+      const body = document.getElementById('email-body').value;
+      if (!addr) return '';
+      let mailto = `mailto:${addr}`;
+      const params = [];
+      if (subj) params.push(`subject=${encodeURIComponent(subj)}`);
+      if (body) params.push(`body=${encodeURIComponent(body)}`);
+      if (params.length) mailto += '?' + params.join('&');
+      return mailto;
+    }
+    return '';
+  }
+
+  function scheduleGenerate() {
+    clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(generate, 300);
+  }
+
+  async function generate() {
+    const sequence = ++generationSequence;
+    if (generationController) generationController.abort();
+    generationController = new AbortController();
+    const content = buildContent();
+    if (!content.trim()) {
+      document.getElementById('preview').innerHTML = '<span class="placeholder">Entrez du contenu pour generer un QR code</span>';
+      document.getElementById('dl-png').disabled = true;
+      document.getElementById('dl-svg').disabled = true;
+      currentData = null;
+      return;
+    }
+
+    const opts = {
+      content,
+      size: parseInt(document.getElementById('opt-size').value),
+      errorCorrection: document.getElementById('opt-ec').value,
+      fgColor: document.getElementById('opt-fg').value,
+      bgColor: document.getElementById('opt-bg').value,
+    };
+
+    document.getElementById('preview').innerHTML = '<span class="loading">Generation...</span>';
+    document.getElementById('dl-png').disabled = true;
+    document.getElementById('dl-svg').disabled = true;
+    currentData = null;
+
+    try {
+      const response = await fetch('/api/generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...opts, format: 'both' }),
+        signal: generationController.signal,
+      });
+      const result = await response.json().catch(() => ({}));
+      if (!response.ok) throw new Error(result.error || 'Generation impossible');
+      if (sequence !== generationSequence) return;
+
+      currentData = { png: result.png, svg: result.svg };
+      const preview = document.getElementById('preview');
+      preview.innerHTML = '';
+      const image = document.createElement('img');
+      image.src = result.png;
+      image.alt = 'QR Code';
+      preview.appendChild(image);
+      document.getElementById('dl-png').disabled = false;
+      document.getElementById('dl-svg').disabled = false;
+    } catch (err) {
+      if (sequence !== generationSequence) return;
+      if (err.name === 'AbortError') return;
+      const preview = document.getElementById('preview');
+      preview.innerHTML = '';
+      const message = document.createElement('span');
+      message.className = 'placeholder';
+      message.style.color = '#ef5350';
+      message.textContent = err.message;
+      preview.appendChild(message);
+      currentData = null;
+      document.getElementById('dl-png').disabled = true;
+      document.getElementById('dl-svg').disabled = true;
+    }
+  }
+
+  // Listen to all inputs
+  document.getElementById('qr-content').addEventListener('input', function() {
+    const len = this.value.length;
+    document.getElementById('char-count').textContent = len;
+    document.querySelector('.char-count').className = 'char-count' + (len > 4000 ? ' over' : '');
+    scheduleGenerate();
+  });
+
+  ['wifi-ssid', 'wifi-pass', 'wifi-enc', 'email-addr', 'email-subject', 'email-body'].forEach(id => {
+    document.getElementById(id).addEventListener('input', scheduleGenerate);
+    document.getElementById(id).addEventListener('change', scheduleGenerate);
+  });
+
+  ['opt-size', 'opt-ec', 'opt-fg', 'opt-bg'].forEach(id => {
+    document.getElementById(id).addEventListener('change', scheduleGenerate);
+    document.getElementById(id).addEventListener('input', scheduleGenerate);
+  });
+
+  // Downloads
+  document.getElementById('dl-png').addEventListener('click', () => {
+    if (!currentData) return;
+    const a = document.createElement('a');
+    a.href = currentData.png;
+    a.download = 'qrcode.png';
+    a.click();
+  });
+
+  document.getElementById('dl-svg').addEventListener('click', () => {
+    if (!currentData) return;
+    const blob = new Blob([currentData.svg], { type: 'image/svg+xml' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'qrcode.svg';
+    a.click();
+    setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+  });
+})();
+</script>
+<footer class="footer" aria-label="Informations">
+  <button type="button" id="bug-toggle" class="btn btn-secondary">Signaler un problème</button>
+  <p><a href="https://purvanas.fr">purvanas.fr</a> · <a href="mailto:contact@purvanas.fr">Contact</a></p>
+</footer>
+<div id="bug-panel" hidden style="position:fixed;inset:auto 1rem 1rem 1rem;max-width:420px;margin:auto;background:#141414;border:1px solid #333;border-radius:12px;padding:1rem;z-index:100">
+  <label for="bug-desc" style="display:block;margin-bottom:.5rem">Décrivez le problème</label>
+  <textarea id="bug-desc" rows="4" maxlength="500" style="width:100%;background:#0a0a0a;color:#eee;border:1px solid #333;border-radius:8px;padding:.7rem"></textarea>
+  <p style="font-size:.7rem;color:#777;margin:.5rem 0">Le rapport contient ce texte, la page consultée et les informations techniques du navigateur.</p>
+  <div style="display:flex;gap:.5rem"><button type="button" id="bug-send" class="btn btn-primary">Envoyer</button><button type="button" id="bug-close" class="btn btn-secondary">Fermer</button></div>
+  <p id="bug-status" role="status" style="font-size:.75rem;margin-top:.5rem"></p>
+</div>
+<script>
+  (() => {
+    const panel = document.getElementById('bug-panel');
+    document.getElementById('bug-toggle').addEventListener('click', () => { panel.hidden = false; document.getElementById('bug-desc').focus(); });
+    document.getElementById('bug-close').addEventListener('click', () => { panel.hidden = true; });
+    document.getElementById('bug-send').addEventListener('click', async () => {
+      const status = document.getElementById('bug-status');
+      const description = document.getElementById('bug-desc').value.trim();
+      if (!description) { status.textContent = 'Décrivez le problème avant l’envoi.'; return; }
+      status.textContent = 'Envoi…';
+      try {
+        const response = await fetch('/api/report-bug', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ error: description, page: location.pathname, userAgent: navigator.userAgent }) });
+        if (!response.ok) throw new Error();
+        status.textContent = 'Merci, le rapport a été envoyé.';
+        document.getElementById('bug-desc').value = '';
+      } catch { status.textContent = 'L’envoi a échoué. Vous pouvez écrire à contact@purvanas.fr.'; }
+    });
+  })();
+</script>
+<script src="/i18n.js"></script>
+<script src="/en.js"></script>
+</body>
+</html>
