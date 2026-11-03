@@ -1,5 +1,7 @@
 # QR Generator
 
+**[Démo en ligne](https://qr.purvanas.fr)** · [Contrôles GitHub](https://github.com/Purvanas/qr-generator/actions)
+
 Un générateur de QR codes simple et rapide pour du texte, des URL, des e-mails et des accès Wi-Fi, avec export PNG et SVG.
 
 L'interface privilégie le retour immédiat : chaque modification relance une génération débouncée, annule la requête devenue obsolète et n'affiche que le dernier résultat. Le serveur produit les deux formats en une seule requête et ne conserve pas le contenu encodé.

@@ -2,11 +2,19 @@ const express = require("express");
 const QRCode = require("qrcode");
 const fs = require("fs");
 const path = require("path");
+const crypto = require("crypto");
 
 const app = express();
 const PORT = process.env.PORT || 3300;
 const HOST = process.env.HOST || "127.0.0.1";
 const ERRORS_TOKEN = process.env.ERRORS_TOKEN || "";
+
+function secretMatches(received, expected) {
+  if (typeof received !== "string" || typeof expected !== "string" || !expected) return false;
+  const actual = Buffer.from(received);
+  const wanted = Buffer.from(expected);
+  return actual.length === wanted.length && crypto.timingSafeEqual(actual, wanted);
+}
 
 // ===== SECURITY =====
 app.disable("x-powered-by");
@@ -127,7 +135,7 @@ app.post("/api/report-bug", (req, res) => {
 });
 
 app.get("/api/errors", (req, res) => {
-  if (!ERRORS_TOKEN || req.headers.authorization !== `Bearer ${ERRORS_TOKEN}`) {
+  if (!ERRORS_TOKEN || !secretMatches(req.headers.authorization, `Bearer ${ERRORS_TOKEN}`)) {
     return res.status(404).json({ error: "Not found" });
   }
   res.set("Cache-Control", "no-store");
@@ -153,4 +161,4 @@ if (require.main === module) {
   });
 }
 
-module.exports = { app };
+module.exports = { app, secretMatches };
