@@ -36,7 +36,8 @@ if (fs.existsSync(STATS_FILE)) {
 }
 function saveJson(file, value) {
   const temporary = `${file}.${process.pid}.tmp`;
-  fs.writeFileSync(temporary, JSON.stringify(value, null, 2));
+  fs.writeFileSync(temporary, JSON.stringify(value, null, 2), { mode: 0o600 });
+  fs.chmodSync(temporary, 0o600);
   fs.renameSync(temporary, file);
 }
 function saveStats() { saveJson(STATS_FILE, stats); }
